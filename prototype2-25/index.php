@@ -5,16 +5,17 @@
 	<style type="text/css">
 
 	body {
+		margin: 0;
 		font-family: helvetica, arial, sans-serif;
 	}
 
 	div.halfWidth {
-    width: 45%;
-    /* border: 1px solid black; */
-    float: left;
-    height: 150px;
-    margin: 1%;
-}
+	    width: 45%;
+	    /* border: 1px solid black; */
+	    float: left;
+	    height: 150px;
+	    margin: 1%;
+	}
 
 
 
@@ -30,7 +31,7 @@
 		float: left;
 		border: 1px solid black;
 		padding:10px;
-		width: 800px;
+		width: 700px;
 	}
 
 	div.wrapper {
@@ -44,6 +45,65 @@
 		border-bottom: 1px solid black;
 		margin-bottom: 20px;
 	}
+	div.queue {
+		position: relative;
+		width: 100px;
+		border-right: 1px solid black;
+		box-sizing: border-box;
+		float:left;
+	}
+
+	div.item {
+	    padding:10px;
+	    background: #e6e6e6;
+	    margin:10px;
+	    text-align: center;
+	    list-style: none;
+	    cursor: all-scroll;
+	    z-index: 2;
+	}
+
+	#cart { 
+	    width: 200px; 
+	    float: left; 
+	    margin-top: 1em; 
+	    position: fixed;
+	    bottom: 0;
+	    width: 100%;
+	    z-index: 1;
+	    height: 75px;
+	}
+
+	.ui-widget-content {
+		height: 75px;
+	}
+
+	#cart ol {
+	    margin: 0;
+	    /*padding: 1em 0 1em 3em;*/
+	    overflow: auto;
+	}
+
+	ol {
+		-webkit-margin-before: 0;
+		-webkit-padding-start: 0;
+	}
+
+	li {
+	    background: #e6e6e6;
+	    padding:10px;
+	    margin:20px;
+	    list-style: none;
+	    float:left;
+	    cursor: all-scroll;
+	}
+
+	div.bottom-padding {
+		position: relative;
+		width: 100%;
+		height: 150px;
+		float: left;
+	}
 
 	</style>
 
@@ -55,6 +115,7 @@
 	?>
 
 	<script>
+		//slider
 		$(function() {
 		    $( "#slider-range" ).slider({
 		      range: true,
@@ -70,7 +131,54 @@
 		    $( "#amount" ).val($( "#slider-range" ).slider( "values", 0 ) +
 		      " - " + $( "#slider-range" ).slider( "values", 1 ) );
 		});
+		//drag and drop
+		$(function() {
+	    //$( "#catalog" ).accordion();
+	    $( "div.item" ).draggable({
+	      appendTo: "body",
+	      helper: "clone"
+	    });
+	    $( "#cart ol" ).droppable({
+	      activeClass: "ui-state-default",
+	      hoverClass: "ui-state-hover",
+	      accept: ":not(.ui-sortable-helper)",
+	      drop: function( event, ui ) {
+	        $( this ).find( ".placeholder" ).remove();
+	        $( "<li></li>" ).text( ui.draggable.text() ).appendTo( this );
+	      }
+	    }).sortable({
+	      items: "li:not(.placeholder)",
+	      sort: function() {
+	        // gets added unintentionally by droppable interacting with sortable
+	        // using connectWithSortable fixes this, but doesn't allow you to customize active/hoverClass options
+	        $( this ).removeClass( "ui-state-default" );
+	      }
+	    });
+	  });
   	</script>
+
+  	<div class="queue">
+  		<div class="item">item 0</div>
+	  	<div class="item">item 1</div>
+	  	<div class="item">item 2</div>
+	  	<div class="item">item 3</div>
+	  	<div class="item">item 4</div>
+	  	<div class="item">item 5</div>
+	  	<div class="item">item 6</div>
+	  	<div class="item">item 7</div>
+	  	<div class="item">item 8</div>
+	  	<div class="item">item 9</div>
+	  	<div class="item">item 10</div>
+	  	<div class="item">item 11</div>
+	  	<div class="item">item 12</div>
+	  	<div class="item">item 13</div>
+	  	<div class="item">item 14</div>
+	  	<div class="item">item 15</div>
+	  	<div class="item">item 16</div>
+	  	<div class="item">item 17</div>
+	  	<div class="item">item 18</div>
+	  	<div class="item">item 19</div>
+  	</div>
 
 	<div class="filters">
 		<div class="halfWidth">
@@ -114,6 +222,15 @@
 	<div class="content">
 
 	</div>
+	<div id="cart">
+	  	<!-- <h1 class="ui-widget-header">Shopping Cart</h1> -->
+	  	<div class="ui-widget-content">
+	    	<ol>
+	      		<li class="placeholder">Add your items here</li>
+	    	</ol>
+	  	</div>
+	</div>
+	<div class="bottom-padding"></div>
 
 	<script type="text/javascript">
 		database.appendAllTo(".content")
